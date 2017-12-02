@@ -18,27 +18,44 @@
         <div class="row">
             <div class="col-md-12">
                 <h1>Mortal Kombat RPG!</h1>
-                <button class="btn btn-success">Click here to begin</button>
+                <div id="begin">
+                    <button type="button" class="btn btn-success">Click here to begin</button>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 chooseChar">
+            <div class="col-md-12" id="afterClicked">
                 <h2>Choose your character</h2>
+                <div class="row" id="chooseChar">
+
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 <div class="yourChar">
                     <h2>Your Character</h2>
+                    <div class="row" id="yourChar">
+
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <h2 class="fighting">Fight</h2>
+            <div class="col-md-3">
+                <h2 class="fighting">Fight
+                    <button id="attacking" type="button" class="btn btn-warning">ATTACK!</button>
+                </h2>
+
+                <div class="row" id="fighting">
+
+                </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="enemyBench">
-                    <h2>Enemies to Attack</h2>
+                    <h2>Enemies</h2>
+                    <div class="row" id="enemyBench">
+
+                    </div>
                 </div>
             </div>
         </div>
