@@ -159,20 +159,24 @@ $(document).ready(function() {
     console.log(theChosenOne.health + " " + theChosenOne.attack);
 
     // FIGHTING.ANYTHING NOT WORKING -- how do I access the object information?
+    // I think it has something to do with "this" or the clicked var
     // update all fighting & fighting.health/enemyAttack to work
     console.log(fighting.health + " " + fighting.enemyAttack);
 
     //  subtract attack from enemy health
-    theChosenOne.health = theChosenOne.health - fighting.enemyAttack;
+    theChosenOne.health -= fighting.enemyAttack;
     // update info on DOM/card
 
     // subtract enemyAttack from chosenOne health
-    fighting.health = fighting.health - theChosenOne.attack;
+    fighting.health -= theChosenOne.attack;
     // update info in DOM card
 
+    // increase chosenOne attack by 5
+    theChosenOne.attack += 5;
+
     // if chosenOne has only more attack to kill, say "finish him"!
-    // bonus to have Finish Her Sound for Kitana - only if enogh time
-    // would have to add fighting.name equal to Or not equal to kitana
+    // bonus to have Finish Her Sound for Kitana - only if enough time
+    // would have to add fighting.name equal to Or not equal to kitana arguments
     if (fighting.health > 0 && fighting.health <= theChosenOne.attack) {
       soundFinishHim.play();
     }
