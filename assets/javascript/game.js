@@ -4,6 +4,7 @@ $(document).ready(function() {
       name: "Scorpion",
       health: 120,
       image: "./assets/image/scorpion.png",
+      baseAttack: 30,
       attack: 30,
       enemyAttack: 15
     },
@@ -12,12 +13,14 @@ $(document).ready(function() {
       health: 100,
       image: "./assets/image/kitana.png",
       attack: 15,
+      baseAttack: 15,
       enemyAttack: 7
     },
     raiden: {
       name: "Raiden",
       health: 150,
       image: "./assets/image/raiden.png",
+      baseAttack: 25,
       attack: 25,
       enemyAttack: 4
     },
@@ -26,17 +29,30 @@ $(document).ready(function() {
       health: 150,
       image: "./assets/image/goro.png",
       attack: 25,
+      baseAttack: 25,
       enemyAttack: 4
     }
   };
   var theChosenOne;
   var enemies = [];
   var killed = [];
-  var fighting = [];
+  var fighting;
   var clickedSetUpGame = false;
   var allowFight = true;
-  var clicked = $(this).attr("data-char");
+  var allowAttack = false;
+  // var clicked = $(this).attr("data-char");
   var soundFinishHim = new Audio("./assets/audio/Finish_Him.mp3");
+
+  function winsLoss(wL) {
+    $("#winLoss").html(wL);
+    setTimeout(wipeOut, 3000);
+  }
+
+  function wipeOut() {
+    $("#winLoss").html("");
+    // reset game
+    reset();
+  }
 
   $(".btn-success").click(setUpGame);
 
@@ -58,6 +74,9 @@ $(document).ready(function() {
 
     var charCard = $("<div>");
     var img = $("<img>");
+    var spanHealth = $("<span id='h-" + fighter + "'> Health: </span>");
+    var spanAttack = $("<span id='a-" + fighter + "'> Attack: </span>");
+    var spanName = $("<span id='n-" + fighter + "'> Name: </span>");
     img.attr("id", "characterImg");
     charCard.attr("id", "character");
     charCard.attr("class", "col-md-3");
@@ -66,15 +85,14 @@ $(document).ready(function() {
     img.attr("src", fighterObj.image);
     img.attr("data-char", fighter);
     charCard.append(img);
-    charCard.append(
-      "<br>" +
-        "name: " +
-        fighterObj.name +
-        " Attack: " +
-        fighterObj.attack +
-        " Heath: " +
-        fighterObj.health
-    );
+    spanName.append(fighterObj.name);
+    spanHealth.append(fighterObj.health);
+    spanAttack.append(fighterObj.attack);
+    charCard.append($("<br>"));
+    charCard
+      .append(spanName)
+      .append(spanAttack)
+      .append(spanHealth);
 
     $("#" + placeToRender).append(charCard);
   }
@@ -140,10 +158,11 @@ $(document).ready(function() {
       }
       //display clicked enemy in fighting
       generateCard(clicked, characters[clicked], "fighting");
+      allowAttack = true;
 
       for (var char in characters) {
         if (char == clicked) {
-          fighting.push(characters[char]);
+          fighting = characters[char];
         }
       }
       console.log(fighting);
@@ -153,51 +172,85 @@ $(document).ready(function() {
   });
 
   // event listener - click attack - to attack fighting enemy
-  $("#attacking").click(function() {
-    // BONUS ADD ATTACKING SOUNDS
+  $("#attacking").on("click", function() {
+    if (allowAttack == true) {
+      // BONUS ADD ATTACKING SOUNDS
 
-    console.log(theChosenOne.health + " " + theChosenOne.attack);
+      console.log(theChosenOne.health, theChosenOne.attack);
 
-    // FIGHTING.ANYTHING NOT WORKING -- how do I access the object information?
-    // I think it has something to do with "this" or the clicked var
-    // update all fighting & fighting.health/enemyAttack to work
-    console.log(fighting.health + " " + fighting.enemyAttack);
+      // FIGHTING.ANYTHING NOT WORKING -- how do I access the object information?
+      // I think it has something to do with "this" or the clicked var
+      // update all fighting & fighting.health/enemyAttack to work
+      console.log(fighting.health, fighting.enemyAttack);
 
-    //  subtract attack from enemy health
-    theChosenOne.health -= fighting.enemyAttack;
-    // update info on DOM/card
+      //  subtract attack from enemy health
+      theChosenOne.health -= fighting.enemyAttack;
+      // update info on DOM/card
 
-    // subtract enemyAttack from chosenOne health
-    fighting.health -= theChosenOne.attack;
-    // update info in DOM card
+      // subtract enemyAttack from chosenOne health
+      fighting.health -= theChosenOne.attack;
+      // update info in DOM card
 
-    // increase chosenOne attack by 5
-    theChosenOne.attack += 5;
-
-    // if chosenOne has only more attack to kill, say "finish him"!
-    // bonus to have Finish Her Sound for Kitana - only if enough time
-    // would have to add fighting.name equal to Or not equal to kitana arguments
-    if (fighting.health > 0 && fighting.health <= theChosenOne.attack) {
-      soundFinishHim.play();
-    }
-    // chosenOne attack to kill enemy health, enemy health = 0, turn allow fight to true
-    if (fighting.health <= 0) {
-      // add to killed array
-      killed.push(fighting);
-      // remove char card from DOM
+      // increase chosenOne attack by 5
+      theChosenOne.attack += theChosenOne.baseAttack;
       $("#fighting").empty();
-      // turn back on allow fight
-      allowFight = true;
-    }
-    // if enemy attack >= chosenOne health, you lose
-    if (theChosenOne.health <= 0) {
-      // game over -- timer
-      // reset?
-    }
-    // if killed.length = 3, you win!
-    if (killed.length === 3) {
-      // you win! -- timer
-      // reset?
+      $("#yourChar").empty();
+      generateCard(fighting.name, fighting, "fighting");
+      generateCard(theChosenOne.name, theChosenOne, "yourChar");
+
+      // if chosenOne has only more attack to kill, say "finish him"!
+      // bonus to have Finish Her Sound for Kitana - only if enough time
+      // would have to add fighting.name equal to Or not equal to kitana arguments
+      if (fighting.health > 0 && fighting.health <= theChosenOne.attack) {
+        soundFinishHim.play();
+      }
+      // chosenOne attack to kill enemy health, enemy health = 0, turn allow fight to true
+      if (fighting.health <= 0) {
+        // add to killed array
+        killed.push(fighting);
+        // remove char card from DOM
+        $("#fighting").empty();
+        // turn back on allow fight
+        allowFight = true;
+        allowAttack = false;
+      }
+      // if enemy attack >= chosenOne health, you lose
+      if (theChosenOne.health <= 0) {
+        winsLoss("Fatality!");
+        // game over -- timer
+        // reset?
+      }
+      // if killed.length = 3, you win!
+      if (killed.length === 3) {
+        caches;
+        console.log("reset working");
+
+        // you win! -- timer
+
+        // reset?
+
+        winsLoss("Victorious!");
+      }
     }
   });
+
+  function reset() {
+    clickedSetUpGame = false;
+    $("#afterClicked").append("<h2>Choose your character</h2>");
+    $("#afterClicked").append("<div class='row' id='chooseChar'></div>");
+    $("#yourChar").empty();
+    characters["scorpion"].health = 120;
+    characters["scorpion"].attack = 30;
+    characters["kitana"].health = 100;
+    characters["kitana"].attack = 15;
+    characters["raiden"].health = 150;
+    characters["raiden"].attack = 25;
+    characters["goro"].health = 150;
+    characters["goro"].attack = 25;
+    setUpGame();
+
+    // for (var fighter in characters) {
+    //   console.log(characters[fighter].health, characters[fighter].attack);
+    // }
+  }
 });
