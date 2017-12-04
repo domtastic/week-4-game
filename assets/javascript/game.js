@@ -60,10 +60,13 @@ $(document).ready(function() {
 
   function setUpGame() {
     if (clickedSetUpGame === false) {
+      $("#afterClicked").css("visibility", "visible");
+
       for (var fighter in characters) {
         generateCard(fighter, characters[fighter], "chooseChar");
       }
       clickedSetUpGame = true;
+      $("#begin").empty();
     }
   }
   // input information into div and push to html
@@ -76,21 +79,22 @@ $(document).ready(function() {
     var img = $("<img>");
     var spanHealth = $("<span id='h-" + fighter + "'> Health: </span>");
     var spanAttack = $("<span id='a-" + fighter + "'> Attack: </span>");
-    var spanName = $("<span id='n-" + fighter + "'> Name: </span>");
+    var spanName = $("<span id='n-" + fighter + "'></span>");
     img.attr("id", "characterImg");
     charCard.attr("id", "character");
-    charCard.attr("class", "col-md-3");
+    // charCard.attr("class", "col-md-3");
 
     // add info to character card - name, image, health
     img.attr("src", fighterObj.image);
     img.attr("data-char", fighter);
+    charCard.append(spanName);
     charCard.append(img);
     spanName.append(fighterObj.name);
     spanHealth.append(fighterObj.health);
     spanAttack.append(fighterObj.attack);
     charCard.append($("<br>"));
     charCard
-      .append(spanName)
+      // .append(spanName)
       .append(spanAttack)
       .append(spanHealth);
 
@@ -100,6 +104,7 @@ $(document).ready(function() {
   //add an event listener to the card
   //add an id to each character and wait for that click
   $("#chooseChar").on("click", "#characterImg", function() {
+    $("#fightLine").css("visibility", "visible");
     console.log($(this));
     console.log($(this).attr("data-char"));
     var clicked = $(this).attr("data-char");
@@ -118,7 +123,7 @@ $(document).ready(function() {
     console.log(enemies);
 
     $("#afterClicked").empty();
-    $("#begin").empty();
+
     generateCard(clicked, theChosenOne, "yourChar");
 
     for (var i = 0; i < enemies.length; i++) {
@@ -216,7 +221,7 @@ $(document).ready(function() {
       }
       // if enemy attack >= chosenOne health, you lose
       if (theChosenOne.health <= 0) {
-        winsLoss("Fatality!");
+        winsLoss('<p class="result">Fatality!</p>');
         // game over -- timer
         // reset?
       }
@@ -229,7 +234,7 @@ $(document).ready(function() {
 
         // reset?
 
-        winsLoss("Victorious!");
+        winsLoss('<p class="result">Victorious!</p>');
       }
     }
   });
@@ -247,6 +252,7 @@ $(document).ready(function() {
     characters["raiden"].attack = 25;
     characters["goro"].health = 150;
     characters["goro"].attack = 25;
+    $("#fightLine").css("visibility", "hidden");
     setUpGame();
 
     // for (var fighter in characters) {
