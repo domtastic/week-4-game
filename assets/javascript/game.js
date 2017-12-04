@@ -2,7 +2,7 @@ $(document).ready(function() {
   var characters = {
     scorpion: {
       name: "Scorpion",
-      health: 120,
+      health: 130,
       image: "./assets/image/scorpion.png",
       baseAttack: 12,
       attack: 12,
@@ -10,10 +10,10 @@ $(document).ready(function() {
     },
     kitana: {
       name: "Kitana",
-      health: 130,
+      health: 210,
       image: "./assets/image/kitana.png",
-      attack: 7,
-      baseAttack: 7,
+      attack: 8,
+      baseAttack: 8,
       enemyAttack: 5
     },
     raiden: {
@@ -106,7 +106,7 @@ $(document).ready(function() {
     var charCard = $("<div>");
     var img = $("<img>");
     var spanHealth = $("<span id='h-" + fighter + "'> Health: </span>");
-    var spanAttack = $("<span id='a-" + fighter + "'> Attack: </span>");
+    // var spanAttack = $("<span id='a-" + fighter + "'> Attack: </span>");
     var spanName = $("<span id='n-" + fighter + "'></span>");
     img.attr("id", "characterImg");
     charCard.attr("id", "character");
@@ -119,11 +119,11 @@ $(document).ready(function() {
     charCard.append(img);
     spanName.append(fighterObj.name);
     spanHealth.append(fighterObj.health);
-    spanAttack.append(fighterObj.attack);
+    // spanAttack.append(fighterObj.attack);
     charCard.append($("<br>"));
     charCard
       // .append(spanName)
-      .append(spanAttack)
+      // .append(spanAttack)
       .append(spanHealth);
 
     $("#" + placeToRender).append(charCard);
@@ -292,10 +292,10 @@ $(document).ready(function() {
     $("#afterClicked").append("<h2>Choose your character</h2>");
     $("#afterClicked").append("<div class='row' id='chooseChar'></div>");
     $("#yourChar").empty();
-    characters["scorpion"].health = 120;
-    characters["scorpion"].attack = 10;
-    characters["kitana"].health = 130;
-    characters["kitana"].attack = 6;
+    characters["scorpion"].health = 130;
+    characters["scorpion"].attack = 12;
+    characters["kitana"].health = 210;
+    characters["kitana"].attack = 8;
     characters["raiden"].health = 150;
     characters["raiden"].attack = 10;
     characters["goro"].health = 180;
