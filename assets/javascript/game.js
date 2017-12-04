@@ -4,33 +4,33 @@ $(document).ready(function() {
       name: "Scorpion",
       health: 120,
       image: "./assets/image/scorpion.png",
-      baseAttack: 30,
-      attack: 30,
+      baseAttack: 12,
+      attack: 12,
       enemyAttack: 15
     },
     kitana: {
       name: "Kitana",
-      health: 100,
+      health: 130,
       image: "./assets/image/kitana.png",
-      attack: 15,
-      baseAttack: 15,
-      enemyAttack: 7
+      attack: 7,
+      baseAttack: 7,
+      enemyAttack: 5
     },
     raiden: {
       name: "Raiden",
       health: 150,
       image: "./assets/image/raiden.png",
-      baseAttack: 25,
-      attack: 25,
-      enemyAttack: 4
+      baseAttack: 10,
+      attack: 10,
+      enemyAttack: 20
     },
     goro: {
       name: "Goro",
-      health: 150,
+      health: 180,
       image: "./assets/image/goro.png",
-      attack: 25,
-      baseAttack: 25,
-      enemyAttack: 4
+      attack: 7,
+      baseAttack: 7,
+      enemyAttack: 25
     }
   };
   var theChosenOne;
@@ -63,6 +63,9 @@ $(document).ready(function() {
   var soundGoro = new Audio("./assets/audio/Goro_Roar_Sound_Effect.mp3");
   var soundGoroWins = new Audio(
     "./assets/audio/MK4_Goro_Wins_Sound_Effect.mp3"
+  );
+  var soundFatality = new Audio(
+    "./assets/audio/Fatality-Mortal-Kombat-Sound-Effect.mp3"
   );
   var MKThemeSong = new Audio(
     "./assets/audio/Mortal-Kombat-Theme-Song-Original.mp3"
@@ -209,7 +212,6 @@ $(document).ready(function() {
       }
       console.log(fighting);
       allowFight = false;
-      // BONUS - Toggle visibility of attack button
     }
   });
 
@@ -220,8 +222,6 @@ $(document).ready(function() {
 
       console.log(theChosenOne.health, theChosenOne.attack);
 
-      // FIGHTING.ANYTHING NOT WORKING -- how do I access the object information?
-      // I think it has something to do with "this" or the clicked var
       // update all fighting & fighting.health/enemyAttack to work
       console.log(fighting.health, fighting.enemyAttack);
 
@@ -243,7 +243,11 @@ $(document).ready(function() {
       // if chosenOne has only more attack to kill, say "finish him"!
       // bonus to have Finish Her Sound for Kitana - only if enough time
       // would have to add fighting.name equal to Or not equal to kitana arguments
-      if (fighting.health > 0 && fighting.health <= theChosenOne.attack) {
+      if (
+        fighting.health > 0 &&
+        fighting.health <= theChosenOne.attack &&
+        theChosenOne.health > 0
+      ) {
         soundFinishHim.play();
       }
       // chosenOne attack to kill enemy health, enemy health = 0, turn allow fight to true
@@ -258,12 +262,12 @@ $(document).ready(function() {
       }
       // if enemy attack >= chosenOne health, you lose
       if (theChosenOne.health <= 0) {
+        allowAttack = false;
+        soundFatality.play();
         winsLoss('<p class="result">Fatality!</p>');
-        // game over -- timer
-        // reset?
-      }
-      // if killed.length = 3, you win!
-      if (killed.length === 3) {
+      } else if (killed.length === 3) {
+        // if killed.length = 3, you win!
+
         caches;
         console.log("reset working");
         console.log(theChosenOne.name);
@@ -277,11 +281,7 @@ $(document).ready(function() {
         } else if (theChosenOne.name === "Goro") {
           soundGoroWins.play();
         }
-
-        // you win! -- timer
-
-        // reset?
-
+        // you win! timer & reset
         winsLoss('<p class="result">Victorious!</p>');
       }
     }
@@ -293,13 +293,13 @@ $(document).ready(function() {
     $("#afterClicked").append("<div class='row' id='chooseChar'></div>");
     $("#yourChar").empty();
     characters["scorpion"].health = 120;
-    characters["scorpion"].attack = 30;
-    characters["kitana"].health = 100;
-    characters["kitana"].attack = 15;
+    characters["scorpion"].attack = 10;
+    characters["kitana"].health = 130;
+    characters["kitana"].attack = 6;
     characters["raiden"].health = 150;
-    characters["raiden"].attack = 25;
-    characters["goro"].health = 150;
-    characters["goro"].attack = 25;
+    characters["raiden"].attack = 10;
+    characters["goro"].health = 180;
+    characters["goro"].attack = 7;
     $("#fightLine").css("visibility", "hidden");
     setUpGame();
 
