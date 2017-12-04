@@ -3,7 +3,7 @@ body {
   color: white;
   height: 100%;
   background-size: cover;
-  font-family: "mkfont";
+  font-family: mkfont, Arial, Helvetica, sans-serif;
 }
 .header {
   margin-top: 6px;
@@ -40,7 +40,6 @@ h1 {
 
 h1 {
   text-align: center;
-  font-family: "mkfont";
   font-size: 72px;
   background: -webkit-linear-gradient(red, rgb(255, 230, 0));
   -webkit-background-clip: text;
@@ -50,6 +49,11 @@ h1 {
 span {
   font-size: 17px;
   color: white;
+}
+p {
+  color: red;
+  -webkit-text-stroke-width: 3px;
+  -webkit-text-stroke-color: black;
 }
 .result {
   font-size: 50px;
@@ -64,5 +68,3 @@ img {
   font-family: "mkfont";
   src: url("../fonts/Mortal Kombat 3.ttf");
 }
-
-\

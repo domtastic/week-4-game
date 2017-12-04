@@ -42,7 +42,32 @@ $(document).ready(function() {
   var allowAttack = false;
   // var clicked = $(this).attr("data-char");
   var soundFinishHim = new Audio("./assets/audio/Finish_Him.mp3");
-
+  var soundScorpion = new Audio(
+    "./assets/audio/Mortal_Kombat_3_Scorpion_Sound_Effect.mp3"
+  );
+  var soundScorpionWins = new Audio(
+    "./assets/audio/MK3_Scorpion_Wins_Sound_Effect.mp3"
+  );
+  var soundKitana = new Audio(
+    "./assets/audio/Mortal_Kombat_3_Kitana_Sound_Effect.mp3"
+  );
+  var soundKitanaWins = new Audio(
+    "./assets/audio/MK3_Kitana_Wins_Sound_Effect.mp3"
+  );
+  var soundRaiden = new Audio(
+    "./assets/audio/Mortal_Kombat_3_Raiden_Sound_Effect.mp3"
+  );
+  var soundRaidenWins = new Audio(
+    "./assets/audio/MK3_Raiden_Wins_Sound_Effect.mp3"
+  );
+  var soundGoro = new Audio("./assets/audio/Goro_Roar_Sound_Effect.mp3");
+  var soundGoroWins = new Audio(
+    "./assets/audio/MK4_Goro_Wins_Sound_Effect.mp3"
+  );
+  var MKThemeSong = new Audio(
+    "./assets/audio/Mortal-Kombat-Theme-Song-Original.mp3"
+  );
+  MKThemeSong.play();
   function winsLoss(wL) {
     $("#winLoss").html(wL);
     setTimeout(wipeOut, 3000);
@@ -105,12 +130,24 @@ $(document).ready(function() {
   //add an id to each character and wait for that click
   $("#chooseChar").on("click", "#characterImg", function() {
     $("#fightLine").css("visibility", "visible");
+    MKThemeSong.pause();
+    MKThemeSong.currentTime = 0;
+
     console.log($(this));
     console.log($(this).attr("data-char"));
     var clicked = $(this).attr("data-char");
     //var to hold the player we clicked on
     theChosenOne = characters[clicked];
     console.log(theChosenOne);
+    if (theChosenOne.name === "Scorpion") {
+      soundScorpion.play();
+    } else if (theChosenOne.name === "Kitana") {
+      soundKitana.play();
+    } else if (theChosenOne.name === "Raiden") {
+      soundRaiden.play();
+    } else if (theChosenOne.name === "Goro") {
+      soundGoro.play();
+    }
     //loop over the object
     //if the key != clicked
     //push into array
@@ -229,6 +266,17 @@ $(document).ready(function() {
       if (killed.length === 3) {
         caches;
         console.log("reset working");
+        console.log(theChosenOne.name);
+
+        if (theChosenOne.name === "Scorpion") {
+          soundScorpionWins.play();
+        } else if (theChosenOne.name === "Kitana") {
+          soundKitanaWins.play();
+        } else if (theChosenOne.name === "Raiden") {
+          soundRaidenWins.play();
+        } else if (theChosenOne.name === "Goro") {
+          soundGoroWins.play();
+        }
 
         // you win! -- timer
 
