@@ -96,6 +96,9 @@ $(document).ready(function() {
       clickedSetUpGame = true;
       $("#begin").empty();
     }
+    clickEnemyBench();
+    clickChooseChar();
+    clickAttack();
   }
   // input information into div and push to html
 
@@ -131,45 +134,47 @@ $(document).ready(function() {
   //When the game starts, the player will choose a character by clicking on the fighter's picture.
   //add an event listener to the card
   //add an id to each character and wait for that click
-  $("#chooseChar").on("click", "#characterImg", function() {
-    $("#fightLine").css("visibility", "visible");
-    MKThemeSong.pause();
-    MKThemeSong.currentTime = 0;
+  function clickChooseChar() {
+    $("#chooseChar").on("click", "#characterImg", function() {
+      $("#fightLine").css("visibility", "visible");
+      MKThemeSong.pause();
+      MKThemeSong.currentTime = 0;
 
-    console.log($(this));
-    console.log($(this).attr("data-char"));
-    var clicked = $(this).attr("data-char");
-    //var to hold the player we clicked on
-    theChosenOne = characters[clicked];
-    console.log(theChosenOne);
-    if (theChosenOne.name === "Scorpion") {
-      soundScorpion.play();
-    } else if (theChosenOne.name === "Kitana") {
-      soundKitana.play();
-    } else if (theChosenOne.name === "Raiden") {
-      soundRaiden.play();
-    } else if (theChosenOne.name === "Goro") {
-      soundGoro.play();
-    }
-    //loop over the object
-    //if the key != clicked
-    //push into array
-    for (var char in characters) {
-      if (char != clicked) {
-        //be an array to hold enemies
-        enemies.push(characters[char]);
+      console.log($(this));
+      console.log($(this).attr("data-char"));
+      var clicked = $(this).attr("data-char");
+      //var to hold the player we clicked on
+      theChosenOne = characters[clicked];
+      console.log(theChosenOne);
+      if (theChosenOne.name === "Scorpion") {
+        soundScorpion.play();
+      } else if (theChosenOne.name === "Kitana") {
+        soundKitana.play();
+      } else if (theChosenOne.name === "Raiden") {
+        soundRaiden.play();
+      } else if (theChosenOne.name === "Goro") {
+        soundGoro.play();
       }
-    }
-    console.log(enemies);
+      //loop over the object
+      //if the key != clicked
+      //push into array
+      for (var char in characters) {
+        if (char != clicked) {
+          //be an array to hold enemies
+          enemies.push(characters[char]);
+        }
+      }
+      console.log(enemies);
 
-    $("#afterClicked").empty();
+      $("#afterClicked").empty();
 
-    generateCard(clicked, theChosenOne, "yourChar");
+      generateCard(clicked, theChosenOne, "yourChar");
 
-    for (var i = 0; i < enemies.length; i++) {
-      generateCard(enemies[i].name, enemies[i], "enemyBench");
-    }
-  });
+      for (var i = 0; i < enemies.length; i++) {
+        generateCard(enemies[i].name, enemies[i], "enemyBench");
+      }
+    });
+  }
   //The player will fight as that character for the rest of the game.
   //var to hold the player we clicked on
   //grab the entire object, and store that object to the var
@@ -178,114 +183,118 @@ $(document).ready(function() {
 
   //The player chooses an opponent by clicking on an enemy's picture.
   // event listener  on enemy bench
-  $("#enemyBench").on("click", "#characterImg", function() {
-    if (allowFight == true) {
-      console.log($(this));
-      console.log(
-        $(this)
+  function clickEnemyBench() {
+    $("#enemyBench").on("click", "#characterImg", function() {
+      if (allowFight == true) {
+        console.log($(this));
+        console.log(
+          $(this)
+            .attr("data-char")
+            .toLowerCase()
+        );
+        var finder = $(this).attr("data-char");
+        var clicked = $(this)
           .attr("data-char")
-          .toLowerCase()
-      );
-      var finder = $(this).attr("data-char");
-      var clicked = $(this)
-        .attr("data-char")
-        .toLowerCase();
-      //remove them from the enemies to attack
-      for (var i = 0; i < enemies.length; i++) {
-        if (enemies[i].name == finder) {
-          enemies.splice(i, 1);
+          .toLowerCase();
+        //remove them from the enemies to attack
+        for (var i = 0; i < enemies.length; i++) {
+          if (enemies[i].name == finder) {
+            enemies.splice(i, 1);
+          }
         }
-      }
-      //remove enemy
-      $("#enemyBench").empty();
-      for (var i = 0; i < enemies.length; i++) {
-        generateCard(enemies[i].name, enemies[i], "enemyBench");
-      }
-      //display clicked enemy in fighting
-      generateCard(clicked, characters[clicked], "fighting");
-      allowAttack = true;
+        //remove enemy
+        $("#enemyBench").empty();
+        for (var i = 0; i < enemies.length; i++) {
+          generateCard(enemies[i].name, enemies[i], "enemyBench");
+        }
+        //display clicked enemy in fighting
+        generateCard(clicked, characters[clicked], "fighting");
+        allowAttack = true;
 
-      for (var char in characters) {
-        if (char == clicked) {
-          fighting = characters[char];
+        for (var char in characters) {
+          if (char == clicked) {
+            fighting = characters[char];
+          }
         }
+        console.log(fighting);
+        allowFight = false;
       }
-      console.log(fighting);
-      allowFight = false;
-    }
-  });
+    });
+  }
 
   // event listener - click attack - to attack fighting enemy
-  $("#attacking").on("click", function() {
-    if (allowAttack == true) {
-      // BONUS ADD ATTACKING SOUNDS
+  function clickAttack() {
+    $("#attacking").on("click", function() {
+      if (allowAttack == true) {
+        // BONUS ADD ATTACKING SOUNDS
 
-      console.log(theChosenOne.health, theChosenOne.attack);
+        console.log(theChosenOne.health, theChosenOne.attack);
 
-      // update all fighting & fighting.health/enemyAttack to work
-      console.log(fighting.health, fighting.enemyAttack);
+        // update all fighting & fighting.health/enemyAttack to work
+        console.log(fighting.health, fighting.enemyAttack);
 
-      //  subtract attack from enemy health
-      theChosenOne.health -= fighting.enemyAttack;
-      // update info on DOM/card
+        //  subtract attack from enemy health
+        theChosenOne.health -= fighting.enemyAttack;
+        // update info on DOM/card
 
-      // subtract enemyAttack from chosenOne health
-      fighting.health -= theChosenOne.attack;
-      // update info in DOM card
+        // subtract enemyAttack from chosenOne health
+        fighting.health -= theChosenOne.attack;
+        // update info in DOM card
 
-      // increase chosenOne attack by 5
-      theChosenOne.attack += theChosenOne.baseAttack;
-      $("#fighting").empty();
-      $("#yourChar").empty();
-      generateCard(fighting.name, fighting, "fighting");
-      generateCard(theChosenOne.name, theChosenOne, "yourChar");
-
-      // if chosenOne has only more attack to kill, say "finish him"!
-      // bonus to have Finish Her Sound for Kitana - only if enough time
-      // would have to add fighting.name equal to Or not equal to kitana arguments
-      if (
-        fighting.health > 0 &&
-        fighting.health <= theChosenOne.attack &&
-        theChosenOne.health > 0
-      ) {
-        soundFinishHim.play();
-      }
-      // chosenOne attack to kill enemy health, enemy health = 0, turn allow fight to true
-      if (fighting.health <= 0) {
-        // add to killed array
-        killed.push(fighting);
-        // remove char card from DOM
+        // increase chosenOne attack by 5
+        theChosenOne.attack += theChosenOne.baseAttack;
         $("#fighting").empty();
-        // turn back on allow fight
-        allowFight = true;
-        allowAttack = false;
-      }
-      // if enemy attack >= chosenOne health, you lose
-      if (theChosenOne.health <= 0) {
-        allowAttack = false;
-        soundFatality.play();
-        winsLoss('<p class="result">Fatality!</p>');
-      } else if (killed.length === 3) {
-        // if killed.length = 3, you win!
+        $("#yourChar").empty();
+        generateCard(fighting.name, fighting, "fighting");
+        generateCard(theChosenOne.name, theChosenOne, "yourChar");
 
-        caches;
-        console.log("reset working");
-        console.log(theChosenOne.name);
-
-        if (theChosenOne.name === "Scorpion") {
-          soundScorpionWins.play();
-        } else if (theChosenOne.name === "Kitana") {
-          soundKitanaWins.play();
-        } else if (theChosenOne.name === "Raiden") {
-          soundRaidenWins.play();
-        } else if (theChosenOne.name === "Goro") {
-          soundGoroWins.play();
+        // if chosenOne has only more attack to kill, say "finish him"!
+        // bonus to have Finish Her Sound for Kitana - only if enough time
+        // would have to add fighting.name equal to Or not equal to kitana arguments
+        if (
+          fighting.health > 0 &&
+          fighting.health <= theChosenOne.attack &&
+          theChosenOne.health > 0
+        ) {
+          soundFinishHim.play();
         }
-        // you win! timer & reset
-        winsLoss('<p class="result">Victorious!</p>');
+        // chosenOne attack to kill enemy health, enemy health = 0, turn allow fight to true
+        if (fighting.health <= 0) {
+          // add to killed array
+          killed.push(fighting);
+          // remove char card from DOM
+          $("#fighting").empty();
+          // turn back on allow fight
+          allowFight = true;
+          allowAttack = false;
+        }
+        // if enemy attack >= chosenOne health, you lose
+        if (theChosenOne.health <= 0) {
+          allowAttack = false;
+          soundFatality.play();
+          winsLoss('<p class="result">Fatality!</p>');
+        } else if (killed.length === 3) {
+          // if killed.length = 3, you win!
+
+          caches;
+          console.log("reset working");
+          console.log(theChosenOne.name);
+
+          if (theChosenOne.name === "Scorpion") {
+            soundScorpionWins.play();
+          } else if (theChosenOne.name === "Kitana") {
+            soundKitanaWins.play();
+          } else if (theChosenOne.name === "Raiden") {
+            soundRaidenWins.play();
+          } else if (theChosenOne.name === "Goro") {
+            soundGoroWins.play();
+          }
+          // you win! timer & reset
+          winsLoss('<p class="result">Victorious!</p>');
+        }
       }
-    }
-  });
+    });
+  }
 
   function reset() {
     clickedSetUpGame = false;
@@ -302,6 +311,7 @@ $(document).ready(function() {
     characters["goro"].attack = 7;
     $("#fightLine").css("visibility", "hidden");
     setUpGame();
+    MKThemeSong.play();
 
     // for (var fighter in characters) {
     //   console.log(characters[fighter].health, characters[fighter].attack);
